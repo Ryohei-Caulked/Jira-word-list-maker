@@ -19,7 +19,6 @@ This project automates English vocabulary extraction from transcripts and posts 
 
 6. Jira Comment – The vocabulary list is formatted into a Markdown-style table and automatically posted as a comment in the related Jira issue.
 
-    ![GUI sample](./img/gui_guide.png)
 
 
 ## ✅ Key Features
