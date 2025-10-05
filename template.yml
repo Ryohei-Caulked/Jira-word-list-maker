@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Serverless Application Model template describing your function.
+Resources:
+  Jirawordlistmaker:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src
+      Description: ''
+      MemorySize: 512
+      Timeout: 60
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      EphemeralStorage:
+        Size: 512
+      Environment:
+        Variables:
+          GOOGLE_API_KEY: INSERT_YOUR_GOOGLE_API_KEY #INSERT
+          JIRA_TOKEN: >-
+            INSERT_YOUR_JIRA_TOKEN
+          #INSERT
+          JIRA_URL: INSERT_YOUR_JIRA_URL #INSERT
+          JIRA_USER: INSERT_YOUR_JIRA_USER_EMAIL #INSERT
+      EventInvokeConfig:
+        MaximumEventAgeInSeconds: 21600
+        MaximumRetryAttempts: 2
+      Layers:
+        - !Ref Layer1
+        - !Ref Layer2
+      PackageType: Zip
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+              Resource: arn:aws:logs:us-east-1:INSERT_YOUR_AWS_USER_ID:* #INSERT
+            - Effect: Allow
+              Action:
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource:
+                - >-
+                  arn:aws:logs:us-east-1:INSERT_YOUR_AWS_USER_ID:log-group:/aws/lambda/Jira-word-list-maker:*
+                #INSERT
+      RecursiveLoop: Terminate
+      SnapStart:
+        ApplyOn: None
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /jira-word-list-maker
+            Method: ANY
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
+
+  Layer1:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ./Jira-word-list-maker
+      LayerName: Jira-word-list-maker
+      CompatibleRuntimes:
+        - python3.9
+
+  Layer2:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ./wordfreq
+      LayerName: wordfreq
+      CompatibleRuntimes:
+        - python3.9
