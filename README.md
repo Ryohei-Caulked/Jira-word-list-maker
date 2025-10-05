@@ -7,7 +7,6 @@ This project automates English vocabulary extraction from transcripts and posts 
 
     \* I show you an automation sample below. In this sample, When you add an English transcript to "Transcript" field in a JIRA task, POST API is invoked by JIRA automation to AWS API Gateway, and finally to AWS Lambda.
 
-    ![automation sample](./img/automation.png)
 
 2. Processing – The API Gateway invokes an AWS Lambda function written in Python. The Lambda securely loads credentials from environment variables.
 
